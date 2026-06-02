@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS "regions" (
 
 CREATE UNIQUE INDEX IF NOT EXISTS "uq_regions_code" ON "regions" ("code");
 CREATE INDEX IF NOT EXISTS "idx_regions_name" ON "regions" ("name");
-CREATE INDEX IF NOT EXISTS "idx_regions_name_like" ON "regions" USING gin ("code" gin_trgm_ops);
+CREATE INDEX IF NOT EXISTS "idx_regions_name_like" ON "regions" USING gin ("name" gin_trgm_ops);
 
 CREATE OR REPLACE TRIGGER "tgr_regions_updated_at"
     BEFORE UPDATE ON "regions"

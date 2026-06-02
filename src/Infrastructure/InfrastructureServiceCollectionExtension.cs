@@ -8,7 +8,7 @@ using NZWalk.Infrastructure.Settings;
 
 namespace NZWalk.Infrastructure;
 
-public static class ServiceCollectionExtension
+public static class InfrastructureServiceCollectionExtension
 {
     /// <summary>
     /// Configure Infrastructure services

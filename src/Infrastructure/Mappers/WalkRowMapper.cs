@@ -7,7 +7,7 @@ using UnitsNet;
 namespace NZWalk.Infrastructure.Mappers;
 
 [Mapper(ThrowOnPropertyMappingNullMismatch = true)]
-public static partial class WalkMapper
+public static partial class WalkRowMapper
 {
     [MapProperty(nameof(WalkRow.LengthKm), nameof(Walk.Length), Use = nameof(MapLength))]
     [MapValue(nameof(Walk.Region), Use = nameof(EmptyRegion))]

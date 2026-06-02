@@ -20,4 +20,8 @@
     <PackageReference Include="FastCloner.SourceGenerator" />
     <PackageReference Include="UnitsNet" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Validators\" />
+  </ItemGroup>
 </Project>

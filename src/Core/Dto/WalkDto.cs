@@ -1,7 +1,7 @@
 using System;
 using NZWalks.Core.Models;
 
-namespace NZWalk.Api.Dto;
+namespace NZWalks.Core.Dto;
 
 public record WalkDto(
     Guid Id,

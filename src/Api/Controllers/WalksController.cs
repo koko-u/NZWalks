@@ -3,9 +3,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using NZWalk.Api.Dto;
-using NZWalks.Core.Models;
+using NZWalks.Core.Dto;
 using NZWalks.Core.Services;
+using WalkDtoMapper = NZWalks.Core.Mappers.WalkDtoMapper;
 
 namespace NZWalk.Api.Controllers;
 
@@ -17,6 +17,6 @@ public sealed class WalksController(WalksService walksService) : ControllerBase
     public async Task<ActionResult<IEnumerable<WalkDto>>> GetAll(CancellationToken ct)
     {
         var walks = await walksService.GetAllWalksAsync(ct);
-        return Ok(walks.Select(w => w.MapToDto()));
+        return Ok(walks.Select(WalkDtoMapper.MapToDto));
     }
 }

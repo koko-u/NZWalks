@@ -1,8 +1,9 @@
+using NZWalks.Core.Dto;
 using NZWalks.Core.Models;
 using Riok.Mapperly.Abstractions;
 using UnitsNet;
 
-namespace NZWalk.Api.Dto;
+namespace NZWalks.Core.Mappers;
 
 [Mapper(ThrowOnPropertyMappingNullMismatch = true)]
 public static partial class WalkDtoMapper
