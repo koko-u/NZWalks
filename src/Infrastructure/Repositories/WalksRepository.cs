@@ -124,4 +124,21 @@ public sealed class WalksRepository(SqlResource sql) : IWalksRepository
             return result?.ToWalkModel();
         };
     }
+
+    public Func<DbSession, CancellationToken, Task<Walk?>> DeleteWalkAsync(Guid id)
+    {
+        return async (session, ct) =>
+        {
+            var (conn, tx) = session;
+            var cmd = new CommandDefinition(
+                commandText: await sql.GetAsync("walks/delete_by_id.sql", ct),
+                parameters: new { Id = id },
+                transaction: tx,
+                cancellationToken: ct
+            );
+
+            var result = await conn.QuerySingleOrDefaultAsync<WalkRow>(cmd);
+            return result?.ToWalkModel();
+        };
+    }
 }

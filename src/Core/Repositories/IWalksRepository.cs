@@ -17,4 +17,6 @@ public interface IWalksRepository
     Func<DbSession, CancellationToken, Task<Walk>> CreateWalkAsync(NewWalkDto walkDto);
 
     Func<DbSession, CancellationToken, Task<Walk?>> UpdateWalkAsync(Guid id, UpdateWalkDto walkDto);
+
+    Func<DbSession, CancellationToken, Task<Walk?>> DeleteWalkAsync(Guid id);
 }

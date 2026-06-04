@@ -94,4 +94,22 @@ public sealed class WalksController(WalksService walksService) : ControllerBase
 
         return Ok(updated.MapToDto());
     }
+
+    [HttpDelete("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> Delete(Guid id, CancellationToken ct)
+    {
+        var deleted = await walksService.DeleteWalkAsync(id, ct);
+        if (deleted is null)
+        {
+            return Problem(
+                title: "Walk not found",
+                detail: "The requested walk could not be found.",
+                statusCode: StatusCodes.Status404NotFound
+            );
+        }
+
+        return NoContent();
+    }
 }
