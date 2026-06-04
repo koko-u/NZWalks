@@ -63,4 +63,35 @@ public sealed class WalksController(WalksService walksService) : ControllerBase
 
         return CreatedAtAction(nameof(GetById), new { id = created.Id }, created.MapToDto());
     }
+
+    [HttpPut("{id:guid}")]
+    [ProducesResponseType<WalkDto>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<WalkDto>> Update(
+        Guid id,
+        [FromBody] UpdateWalkDto walkDto,
+        [FromServices] IValidator<UpdateWalkDto> validator,
+        CancellationToken ct
+    )
+    {
+        var result = await validator.ValidateAsync(walkDto, ct);
+        if (!result.IsValid)
+        {
+            ModelState.Apply(result.Errors);
+            return ValidationProblem(ModelState);
+        }
+
+        var updated = await walksService.UpdateWalkAsync(id, walkDto, ct);
+        if (updated == null)
+        {
+            return Problem(
+                title: "Walk not found",
+                detail: "The requested walk could not be found.",
+                statusCode: StatusCodes.Status404NotFound
+            );
+        }
+
+        return Ok(updated.MapToDto());
+    }
 }

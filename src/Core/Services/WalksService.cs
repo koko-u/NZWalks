@@ -21,4 +21,10 @@ public sealed class WalksService(TxRunner txRunner, IWalksRepository walksRepo)
 
     public async Task<Walk> CreateWalkAsync(NewWalkDto walkDto, CancellationToken ct) =>
         await txRunner.ExecuteAsync(walksRepo.CreateWalkAsync(walkDto), ct);
+
+    public async Task<Walk?> UpdateWalkAsync(
+        Guid id,
+        UpdateWalkDto walkDto,
+        CancellationToken ct
+    ) => await txRunner.ExecuteAsync(walksRepo.UpdateWalkAsync(id, walkDto), ct);
 }

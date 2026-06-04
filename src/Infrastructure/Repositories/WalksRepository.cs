@@ -95,4 +95,33 @@ public sealed class WalksRepository(SqlResource sql) : IWalksRepository
             return walk;
         };
     }
+
+    public Func<DbSession, CancellationToken, Task<Walk?>> UpdateWalkAsync(
+        Guid id,
+        UpdateWalkDto walkDto
+    )
+    {
+        return async (session, ct) =>
+        {
+            var (conn, tx) = session;
+            var cmd = new CommandDefinition(
+                commandText: await sql.GetAsync("walks/update_one.sql", ct),
+                parameters: new
+                {
+                    Id = id,
+                    Name = walkDto.Name,
+                    Description = walkDto.Description,
+                    LengthKm = walkDto.LengthKm,
+                    ImageUrl = walkDto.ImageUrl,
+                    RegionCode = walkDto.RegionCode,
+                    DifficultyName = walkDto.Difficulty,
+                },
+                transaction: tx,
+                cancellationToken: ct
+            );
+
+            var result = await conn.QuerySingleOrDefaultAsync<WalkRow>(cmd);
+            return result?.ToWalkModel();
+        };
+    }
 }
