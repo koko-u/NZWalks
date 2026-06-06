@@ -7,11 +7,16 @@ namespace NZWalk.Api.Extensions;
 
 public static class ValidationFailureExtension
 {
-    public static void Apply(this ModelStateDictionary modelState, List<ValidationFailure> errors)
+    public static ModelStateDictionary Apply(
+        this ModelStateDictionary modelState,
+        List<ValidationFailure> errors
+    )
     {
         foreach (var failure in errors)
         {
             modelState.AddModelError(failure.PropertyName, failure.ErrorMessage);
         }
+
+        return modelState;
     }
 }

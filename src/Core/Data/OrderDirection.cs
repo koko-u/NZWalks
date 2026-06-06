@@ -1,6 +1,6 @@
 using Ardalis.SmartEnum;
 
-namespace NZWalks.Core.Dto;
+namespace NZWalks.Core.Data;
 
 /// <summary>
 /// 並び順の昇順・降順

@@ -17,4 +17,5 @@ FROM "walks" AS "W"
      "difficulties" AS "D"
      ON "W"."difficulty_id" = "D"."id"
 /**where**/
-/**orderby**/;
+/**orderby**/
+LIMIT @Limit OFFSET @Offset;

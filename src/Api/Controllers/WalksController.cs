@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using NZWalk.Api.Extensions;
 using NZWalks.Core.Dto;
 using NZWalks.Core.Mappers;
+using NZWalks.Core.QueryParameters;
+using NZWalks.Core.Responses;
 using NZWalks.Core.Services;
 
 namespace NZWalk.Api.Controllers;
@@ -18,26 +20,36 @@ namespace NZWalk.Api.Controllers;
 public sealed class WalksController(WalksService walksService) : ControllerBase
 {
     [HttpGet]
-    [ProducesResponseType<IEnumerable<WalkDto>>(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<WalkDto>>> GetAll(
+    [ProducesResponseType<PagingItems<WalkDto>>(StatusCodes.Status200OK)]
+    public async Task<ActionResult<PagingItems<WalkDto>>> GetAll(
         [FromQuery] WalkFilter filter,
         [FromServices] IValidator<WalkFilter> validator,
         [FromQuery] WalkOrder order,
         [FromServices] IValidator<WalkOrder> orderValidator,
+        [FromQuery] Paging paging,
+        [FromServices] IValidator<Paging> pagingValidator,
         CancellationToken ct
     )
     {
         var filterResult = await validator.ValidateAsync(filter, ct);
         var orderResult = await orderValidator.ValidateAsync(order, ct);
-        if (!(filterResult.IsValid && orderResult.IsValid))
+        var pagingResult = await pagingValidator.ValidateAsync(paging, ct);
+        if (!(filterResult.IsValid && orderResult.IsValid && pagingResult.IsValid))
         {
-            ModelState.Apply(filterResult.Errors);
-            ModelState.Apply(orderResult.Errors);
+            ModelState
+                .Apply(filterResult.Errors)
+                .Apply(orderResult.Errors)
+                .Apply(pagingResult.Errors);
             return ValidationProblem(ModelState);
         }
 
-        var walks = await walksService.GetAllWalksAsync(filter, order, ct);
-        return Ok(walks.Select(walk => walk.MapToDto()));
+        var pagingItems = await walksService.GetWalksAsync(filter, order, paging, ct);
+        var walks = new PagingItems<WalkDto>
+        {
+            Items = pagingItems.Items.Select(r => r.MapToDto()).ToList(),
+            Page = pagingItems.Page,
+        };
+        return Ok(walks);
     }
 
     [HttpGet("{id:guid}")]

@@ -1,9 +1,10 @@
 using System;
 using System.Linq;
 using FluentValidation;
-using NZWalks.Core.Dto;
+using NZWalks.Core.Data;
+using NZWalks.Core.QueryParameters;
 
-namespace NZWalks.Core.DtoValidators;
+namespace NZWalks.Core.Validators;
 
 public sealed class WalkOrderValidator : AbstractValidator<WalkOrder>
 {

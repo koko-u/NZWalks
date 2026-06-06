@@ -8,9 +8,11 @@ using Dapper;
 using KozLibraries.DapperSqlHelper;
 using NZWalk.Infrastructure.Mappers;
 using NZWalk.Infrastructure.Rows;
+using NZWalks.Core.Data;
 using NZWalks.Core.Dto;
 using NZWalks.Core.Extensions;
 using NZWalks.Core.Models;
+using NZWalks.Core.QueryParameters;
 using NZWalks.Core.Repositories;
 using NZWalks.Core.Tx;
 
@@ -19,14 +21,15 @@ namespace NZWalk.Infrastructure.Repositories;
 [AutoRegisterService]
 public sealed class WalksRepository(SqlResource sql) : IWalksRepository
 {
-    public Func<DbSession, CancellationToken, Task<IEnumerable<Walk>>> GetAllWalksAsync(
+    public Func<DbSession, CancellationToken, Task<IEnumerable<Walk>>> GetWalksAsync(
         WalkFilter filter,
-        WalkOrder order
+        WalkOrder order,
+        Paging paging
     )
     {
         return async (session, ct) =>
         {
-            var template = await CreateSelectAllTemplate(filter, order, ct);
+            var template = await CreateSelectAllTemplate(filter, order, paging, ct);
 
             var (conn, tx) = session;
             var cmd = new CommandDefinition(
@@ -55,11 +58,15 @@ public sealed class WalksRepository(SqlResource sql) : IWalksRepository
     private async Task<SqlBuilder.Template> CreateSelectAllTemplate(
         WalkFilter filter,
         WalkOrder order,
+        Paging paging,
         CancellationToken ct
     )
     {
         var builder = new SqlBuilder();
-        var template = builder.AddTemplate(await sql.GetAsync("walks/select_all_template.sql", ct));
+        var template = builder.AddTemplate(
+            await sql.GetAsync("walks/select_all_template.sql", ct),
+            new { Limit = paging.Limit(), Offset = paging.Offset() }
+        );
         if (!string.IsNullOrEmpty(filter.NameLike))
         {
             builder.Where(
@@ -157,6 +164,84 @@ public sealed class WalksRepository(SqlResource sql) : IWalksRepository
                         """
                     );
                 });
+        }
+
+        return template;
+    }
+
+    public Func<DbSession, CancellationToken, Task<int>> GetWalksTotalCount(WalkFilter filter)
+    {
+        return async (session, ct) =>
+        {
+            var template = await CreateSelectCountTemplate(filter, ct);
+            var (conn, tx) = session;
+            var cmd = new CommandDefinition(
+                commandText: template.RawSql,
+                parameters: template.Parameters,
+                transaction: tx,
+                cancellationToken: ct
+            );
+            return await conn.ExecuteScalarAsync<int>(cmd);
+        };
+    }
+
+    private async Task<SqlBuilder.Template> CreateSelectCountTemplate(
+        WalkFilter filter,
+        CancellationToken ct
+    )
+    {
+        var builder = new SqlBuilder();
+        var template = builder.AddTemplate(
+            await sql.GetAsync("walks/select_count_template.sql", ct)
+        );
+        if (!string.IsNullOrEmpty(filter.NameLike))
+        {
+            builder.Where(
+                """
+                "W"."name" ILIKE @NameLike
+                """,
+                new { NameLike = $"%{filter.NameLike}%" }
+            );
+        }
+
+        if (filter.MinLength.HasValue)
+        {
+            builder.Where(
+                """
+                "W"."length_km" >= @MinLength
+                """,
+                new { filter.MinLength }
+            );
+        }
+
+        if (filter.MaxLength.HasValue)
+        {
+            builder.Where(
+                """
+                "W"."length_km" <= @MaxLength
+                """,
+                new { filter.MaxLength }
+            );
+        }
+
+        if (!string.IsNullOrEmpty(filter.RegionCode))
+        {
+            builder.Where(
+                """
+                "R"."code" = @RegionCode
+                """,
+                new { filter.RegionCode }
+            );
+        }
+
+        if (!string.IsNullOrEmpty(filter.Difficulty))
+        {
+            builder.Where(
+                """
+                "D"."name" = @Difficulty
+                """,
+                new { filter.Difficulty }
+            );
         }
 
         return template;

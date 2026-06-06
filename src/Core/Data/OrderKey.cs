@@ -1,6 +1,6 @@
 using Ardalis.SmartEnum;
 
-namespace NZWalks.Core.Dto;
+namespace NZWalks.Core.Data;
 
 public sealed class OrderKey(string name, string value) : SmartEnum<OrderKey, string>(name, value)
 {

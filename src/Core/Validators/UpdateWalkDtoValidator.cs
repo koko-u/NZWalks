@@ -3,20 +3,20 @@ using FluentValidation;
 using NZWalks.Core.Dto;
 using NZWalks.Core.Services;
 
-namespace NZWalks.Core.DtoValidators;
+namespace NZWalks.Core.Validators;
 
-public sealed class NewWalkDtoValidator : AbstractValidator<NewWalkDto>
+public sealed class UpdateWalkDtoValidator : AbstractValidator<UpdateWalkDto>
 {
-    public NewWalkDtoValidator(
+    public UpdateWalkDtoValidator(
         RegionsService regionsService,
         DifficultiesService difficultiesService
     )
     {
-        RuleFor(x => x.Name).NotEmpty().MaximumLength(255);
+        RuleFor(x => x.Name).MaximumLength(255);
 
         RuleFor(x => x.Description).MaximumLength(4000);
 
-        RuleFor(x => x.LengthKm).NotNull().GreaterThan(0);
+        RuleFor(x => x.LengthKm).GreaterThan(0);
 
         RuleFor(x => x.ImageUrl)
             .MaximumLength(2048)
@@ -36,7 +36,6 @@ public sealed class NewWalkDtoValidator : AbstractValidator<NewWalkDto>
             .WithMessage("Invalid image URL format");
 
         RuleFor(x => x.RegionCode)
-            .NotEmpty()
             .MustAsync(
                 async (regionCode, ct) =>
                 {
@@ -53,7 +52,6 @@ public sealed class NewWalkDtoValidator : AbstractValidator<NewWalkDto>
             .WithMessage("Region code is not exists");
 
         RuleFor(x => x.Difficulty)
-            .NotEmpty()
             .MustAsync(
                 async (difficulty, ct) =>
                 {
@@ -68,5 +66,16 @@ public sealed class NewWalkDtoValidator : AbstractValidator<NewWalkDto>
                 }
             )
             .WithMessage("Difficulty is not exists");
+
+        RuleFor(x => x)
+            .Must(dto =>
+                dto.Name is not null
+                || dto.Description is not null
+                || dto.LengthKm is not null
+                || dto.ImageUrl is not null
+                || dto.RegionCode is not null
+                || dto.Difficulty is not null
+            )
+            .WithMessage("At least one field must be provided for update");
     }
 }

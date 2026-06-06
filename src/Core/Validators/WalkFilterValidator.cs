@@ -1,8 +1,8 @@
 using FluentValidation;
-using NZWalks.Core.Dto;
+using NZWalks.Core.QueryParameters;
 using NZWalks.Core.Services;
 
-namespace NZWalks.Core.DtoValidators;
+namespace NZWalks.Core.Validators;
 
 public sealed class WalkFilterValidator : AbstractValidator<WalkFilter>
 {

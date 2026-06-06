@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace NZWalks.Core.Dto;
+namespace NZWalks.Core.QueryParameters;
 
 public sealed class WalkOrder
 {

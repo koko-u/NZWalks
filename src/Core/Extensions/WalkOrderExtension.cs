@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using NZWalks.Core.Data;
 using NZWalks.Core.Dto;
+using NZWalks.Core.QueryParameters;
 
 namespace NZWalks.Core.Extensions;
 

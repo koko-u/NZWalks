@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace NZWalks.Core.Dto;
+namespace NZWalks.Core.QueryParameters;
 
 /// <summary>
 /// walks を取得する時の条件です

@@ -3,7 +3,7 @@ using FluentValidation;
 using NZWalks.Core.Dto;
 using NZWalks.Core.Services;
 
-namespace NZWalks.Core.DtoValidators;
+namespace NZWalks.Core.Validators;
 
 public sealed class UpdateRegionDtoValidator : AbstractValidator<UpdateRegionDto>
 {
