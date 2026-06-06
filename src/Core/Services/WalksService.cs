@@ -13,8 +13,11 @@ namespace NZWalks.Core.Services;
 [AutoRegisterService]
 public sealed class WalksService(TxRunner txRunner, IWalksRepository walksRepo)
 {
-    public async Task<IEnumerable<Walk>> GetAllWalksAsync(CancellationToken ct) =>
-        await txRunner.ExecuteAsync(walksRepo.GetAllWalksAsync(), ct);
+    public async Task<IEnumerable<Walk>> GetAllWalksAsync(
+        WalkFilter filter,
+        WalkOrder order,
+        CancellationToken ct
+    ) => await txRunner.ExecuteAsync(walksRepo.GetAllWalksAsync(filter, order), ct);
 
     public async Task<Walk?> GetWalkByIdAsync(Guid id, CancellationToken ct) =>
         await txRunner.ExecuteAsync(walksRepo.GetWalkByIdAsync(id), ct);

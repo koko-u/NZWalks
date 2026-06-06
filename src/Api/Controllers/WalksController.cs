@@ -19,9 +19,24 @@ public sealed class WalksController(WalksService walksService) : ControllerBase
 {
     [HttpGet]
     [ProducesResponseType<IEnumerable<WalkDto>>(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<WalkDto>>> GetAll(CancellationToken ct)
+    public async Task<ActionResult<IEnumerable<WalkDto>>> GetAll(
+        [FromQuery] WalkFilter filter,
+        [FromServices] IValidator<WalkFilter> validator,
+        [FromQuery] WalkOrder order,
+        [FromServices] IValidator<WalkOrder> orderValidator,
+        CancellationToken ct
+    )
     {
-        var walks = await walksService.GetAllWalksAsync(ct);
+        var filterResult = await validator.ValidateAsync(filter, ct);
+        var orderResult = await orderValidator.ValidateAsync(order, ct);
+        if (!(filterResult.IsValid && orderResult.IsValid))
+        {
+            ModelState.Apply(filterResult.Errors);
+            ModelState.Apply(orderResult.Errors);
+            return ValidationProblem(ModelState);
+        }
+
+        var walks = await walksService.GetAllWalksAsync(filter, order, ct);
         return Ok(walks.Select(walk => walk.MapToDto()));
     }
 

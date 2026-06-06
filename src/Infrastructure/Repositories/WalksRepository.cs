@@ -9,6 +9,7 @@ using KozLibraries.DapperSqlHelper;
 using NZWalk.Infrastructure.Mappers;
 using NZWalk.Infrastructure.Rows;
 using NZWalks.Core.Dto;
+using NZWalks.Core.Extensions;
 using NZWalks.Core.Models;
 using NZWalks.Core.Repositories;
 using NZWalks.Core.Tx;
@@ -18,13 +19,19 @@ namespace NZWalk.Infrastructure.Repositories;
 [AutoRegisterService]
 public sealed class WalksRepository(SqlResource sql) : IWalksRepository
 {
-    public Func<DbSession, CancellationToken, Task<IEnumerable<Walk>>> GetAllWalksAsync()
+    public Func<DbSession, CancellationToken, Task<IEnumerable<Walk>>> GetAllWalksAsync(
+        WalkFilter filter,
+        WalkOrder order
+    )
     {
         return async (session, ct) =>
         {
+            var template = await CreateSelectAllTemplate(filter, order, ct);
+
             var (conn, tx) = session;
             var cmd = new CommandDefinition(
-                commandText: await sql.GetAsync("walks/select_all.sql", ct),
+                commandText: template.RawSql,
+                parameters: template.Parameters,
                 transaction: tx,
                 cancellationToken: ct
             );
@@ -43,6 +50,116 @@ public sealed class WalksRepository(SqlResource sql) : IWalksRepository
                 return walk;
             });
         };
+    }
+
+    private async Task<SqlBuilder.Template> CreateSelectAllTemplate(
+        WalkFilter filter,
+        WalkOrder order,
+        CancellationToken ct
+    )
+    {
+        var builder = new SqlBuilder();
+        var template = builder.AddTemplate(await sql.GetAsync("walks/select_all_template.sql", ct));
+        if (!string.IsNullOrEmpty(filter.NameLike))
+        {
+            builder.Where(
+                """
+                "W"."name" ILIKE @NameLike
+                """,
+                new { NameLike = $"%{filter.NameLike}%" }
+            );
+        }
+
+        if (filter.MinLength.HasValue)
+        {
+            builder.Where(
+                """
+                "W"."length_km" >= @MinLength
+                """,
+                new { filter.MinLength }
+            );
+        }
+
+        if (filter.MaxLength.HasValue)
+        {
+            builder.Where(
+                """
+                "W"."length_km" <= @MaxLength
+                """,
+                new { filter.MaxLength }
+            );
+        }
+
+        if (!string.IsNullOrEmpty(filter.RegionCode))
+        {
+            builder.Where(
+                """
+                "R"."code" = @RegionCode
+                """,
+                new { filter.RegionCode }
+            );
+        }
+
+        if (!string.IsNullOrEmpty(filter.Difficulty))
+        {
+            builder.Where(
+                """
+                "D"."name" = @Difficulty
+                """,
+                new { filter.Difficulty }
+            );
+        }
+
+        foreach (var (key, direction) in order.OrderByFields())
+        {
+            key.When(OrderKey.Id)
+                .Then(() =>
+                {
+                    builder.OrderBy(
+                        $"""
+                        "W"."id" {direction.Value}
+                        """
+                    );
+                })
+                .When(OrderKey.WalkName)
+                .Then(() =>
+                {
+                    builder.OrderBy(
+                        $"""
+                        "W"."name" {direction.Value}
+                        """
+                    );
+                })
+                .When(OrderKey.Length)
+                .Then(() =>
+                {
+                    builder.OrderBy(
+                        $"""
+                        "W"."length_km" {direction.Value}
+                        """
+                    );
+                })
+                .When(OrderKey.RegionCode)
+                .Then(() =>
+                {
+                    builder.OrderBy(
+                        $"""
+                        "R"."code" {direction.Value}
+                        """
+                    );
+                })
+                .When(OrderKey.Difficulty)
+                .Then(() =>
+                {
+                    builder.OrderBy(
+                        $"""
+                        "D"."name" {direction.Value}
+                        """
+                    );
+                });
+        }
+
+        return template;
     }
 
     public Func<DbSession, CancellationToken, Task<Walk?>> GetWalkByIdAsync(Guid id)

@@ -15,7 +15,9 @@ SELECT "W"."id",
        "W"."length_km",
        "W"."image_url",
        "W"."region_id",
+       "R"."code" AS "region_code",
        "R"."name" AS "region_name",
+       "R"."image_url" AS "region_image_url",
        "W"."difficulty_id",
        "D"."name" AS "difficulty_name"
 FROM "deleted_row" AS "W"

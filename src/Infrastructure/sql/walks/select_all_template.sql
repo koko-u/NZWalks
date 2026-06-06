@@ -4,7 +4,9 @@ SELECT "W"."id",
        "W"."length_km",
        "W"."image_url",
        "W"."region_id",
+       "R"."code" AS "region_code",
        "R"."name" AS "region_name",
+       "R"."image_url" AS "region_image_url",
        "W"."difficulty_id",
        "D"."name" AS "difficulty_name"
 FROM "walks" AS "W"
@@ -14,4 +16,5 @@ FROM "walks" AS "W"
          INNER JOIN
      "difficulties" AS "D"
      ON "W"."difficulty_id" = "D"."id"
-ORDER BY "W"."id";
+/**where**/
+/**orderby**/;

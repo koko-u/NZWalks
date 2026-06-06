@@ -10,7 +10,10 @@ namespace NZWalks.Core.Repositories;
 
 public interface IWalksRepository
 {
-    Func<DbSession, CancellationToken, Task<IEnumerable<Walk>>> GetAllWalksAsync();
+    Func<DbSession, CancellationToken, Task<IEnumerable<Walk>>> GetAllWalksAsync(
+        WalkFilter filter,
+        WalkOrder order
+    );
 
     Func<DbSession, CancellationToken, Task<Walk?>> GetWalkByIdAsync(Guid id);
 
