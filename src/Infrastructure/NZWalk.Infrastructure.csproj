@@ -12,13 +12,13 @@
     <PackageReference Include="KozLibraries.DapperDateOnlySupport" />
     <PackageReference Include="KozLibraries.DapperSqlHelper" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" />
     <PackageReference Include="Dapper" />
     <PackageReference Include="Dapper.SqlBuilder" />
     <PackageReference Include="Npgsql" />
     <PackageReference Include="Npgsql.DependencyInjection" />
     <PackageReference Include="UnitsNet" />
     <PackageReference Include="Riok.Mapperly" PrivateAssets="all" ExcludeAssets="runtime" />
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" />
   </ItemGroup>
 
   <ItemGroup>

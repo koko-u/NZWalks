@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NZWalk.Api.Extensions;
-using NZWalks.Core.Dto;
-using NZWalks.Core.Models;
-using NZWalks.Core.Services;
+using NZWalks.Core.Features.Regions.Dto;
+using NZWalks.Core.Features.Regions.Models;
+using NZWalks.Core.Features.Regions.Services;
 
 namespace NZWalk.Api.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/regions")]
 public sealed class RegionsController(RegionsService regionsService) : ControllerBase

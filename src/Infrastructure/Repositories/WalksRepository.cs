@@ -8,13 +8,14 @@ using Dapper;
 using KozLibraries.DapperSqlHelper;
 using NZWalk.Infrastructure.Mappers;
 using NZWalk.Infrastructure.Rows;
-using NZWalks.Core.Data;
-using NZWalks.Core.Dto;
-using NZWalks.Core.Extensions;
-using NZWalks.Core.Models;
-using NZWalks.Core.QueryParameters;
-using NZWalks.Core.Repositories;
-using NZWalks.Core.Tx;
+using NZWalks.Core.Features.Difficulties.Models;
+using NZWalks.Core.Features.Regions.Models;
+using NZWalks.Core.Features.Walks.Dto;
+using NZWalks.Core.Features.Walks.Models;
+using NZWalks.Core.Features.Walks.QueryParameters;
+using NZWalks.Core.Features.Walks.Repositories;
+using NZWalks.Core.Shared.Paging;
+using NZWalks.Core.Shared.Tx;
 
 namespace NZWalk.Infrastructure.Repositories;
 

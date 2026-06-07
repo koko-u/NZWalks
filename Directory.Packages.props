@@ -26,6 +26,9 @@
       Version="10.0.8"
     />
     <PackageVersion Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.8" />
+    <PackageVersion Include="Microsoft.Extensions.Identity.Core" Version="10.0.8" />
+    <PackageVersion Include="Microsoft.Extensions.Options.DataAnnotations" Version="10.0.8" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.8" />
 
     <PackageVersion Include="xunit.v3" Version="3.2.2" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
@@ -51,7 +54,6 @@
     <PackageVersion Include="FluentValidation" Version="12.1.1" />
     <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
 
-    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.8" />
     <PackageVersion Include="Easy.Password.Validator" Version="1.2.9" />
 
     <PackageVersion Include="Ardalis.SmartEnum" Version="8.2.0" />
@@ -63,5 +65,8 @@
     <PackageVersion Include="FastCloner.SourceGenerator" Version="1.2.1" />
 
     <PackageVersion Include="UnitsNet" Version="5.75.0" />
+
+    <PackageVersion Include="zxcvbn-core" Version="7.0.92" />
+    <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.19.1" />
   </ItemGroup>
 </Project>

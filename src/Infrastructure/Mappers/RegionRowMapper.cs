@@ -1,5 +1,5 @@
 using NZWalk.Infrastructure.Rows;
-using NZWalks.Core.Models;
+using NZWalks.Core.Features.Regions.Models;
 using Riok.Mapperly.Abstractions;
 
 namespace NZWalk.Infrastructure.Mappers;

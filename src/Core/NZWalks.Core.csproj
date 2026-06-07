@@ -19,5 +19,8 @@
     <PackageReference Include="FastCloner" />
     <PackageReference Include="FastCloner.SourceGenerator" />
     <PackageReference Include="UnitsNet" />
+    <PackageReference Include="zxcvbn-core" />
+    <PackageReference Include="Microsoft.Extensions.Identity.Core" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
   </ItemGroup>
 </Project>

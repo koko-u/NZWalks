@@ -1,10 +1,12 @@
 using System;
 using AutoRegisterAnnotation;
 using KozLibraries.DapperSqlHelper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NZWalk.Infrastructure.Settings;
+using NZWalks.Core.Features.Auth.Models;
 
 namespace NZWalk.Infrastructure;
 

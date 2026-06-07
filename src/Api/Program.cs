@@ -1,14 +1,22 @@
 using System;
 using System.Globalization;
+using System.Text;
 using System.Threading.Tasks;
 using AutoRegisterAnnotation;
 using FluentValidation;
 using MicroElements.AspNetCore.OpenApi.FluentValidation;
+using Microsoft.AspNetCore.Authentication.BearerToken;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
+using NZWalk.Api.Extensions;
+using NZWalk.Api.OpenApiTransformers;
 using NZWalk.Infrastructure;
 using NZWalks.Core;
+using NZWalks.Core.Features.Auth.Settings;
 using Scalar.AspNetCore;
 using Serilog;
 
@@ -47,6 +55,10 @@ try
     builder.Services.AddValidatorsFromAssemblyContaining<Program>();
     builder.Services.AddFluentValidationRulesToOpenApi();
 
+    // Authentication & Authorization
+    builder.Services.AddJwtBearerAuthentication(builder.Configuration);
+    builder.Services.AddAuthorization();
+
     var logging = (ServiceTypePair srvPair) =>
     {
         var (serviceType, implementationType, lifetime) = srvPair;
@@ -73,6 +85,8 @@ try
             }
         );
         opts.AddFluentValidationRules();
+        opts.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
+        opts.AddOperationTransformer<AuthOperationTransformer>();
     });
 
     var app = builder.Build();
@@ -104,6 +118,7 @@ try
 
     app.UseSerilogRequestLogging();
 
+    app.UseAuthentication();
     app.UseAuthorization();
 
     app.MapControllers();

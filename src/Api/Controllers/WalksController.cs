@@ -1,20 +1,21 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NZWalk.Api.Extensions;
-using NZWalks.Core.Dto;
-using NZWalks.Core.Mappers;
-using NZWalks.Core.QueryParameters;
-using NZWalks.Core.Responses;
-using NZWalks.Core.Services;
+using NZWalks.Core.Features.Walks.Dto;
+using NZWalks.Core.Features.Walks.Mappers;
+using NZWalks.Core.Features.Walks.QueryParameters;
+using NZWalks.Core.Features.Walks.Services;
+using NZWalks.Core.Shared.Paging;
 
 namespace NZWalk.Api.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/walks")]
 public sealed class WalksController(WalksService walksService) : ControllerBase

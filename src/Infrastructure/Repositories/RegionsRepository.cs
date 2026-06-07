@@ -8,10 +8,10 @@ using Dapper;
 using KozLibraries.DapperSqlHelper;
 using NZWalk.Infrastructure.Mappers;
 using NZWalk.Infrastructure.Rows;
-using NZWalks.Core.Dto;
-using NZWalks.Core.Models;
-using NZWalks.Core.Repositories;
-using NZWalks.Core.Tx;
+using NZWalks.Core.Features.Regions.Dto;
+using NZWalks.Core.Features.Regions.Models;
+using NZWalks.Core.Features.Regions.Repositories;
+using NZWalks.Core.Shared.Tx;
 
 namespace NZWalk.Infrastructure.Repositories;
 

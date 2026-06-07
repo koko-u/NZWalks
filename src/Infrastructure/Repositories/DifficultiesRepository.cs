@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using AutoRegisterAnnotation;
 using Dapper;
 using NZWalk.Infrastructure.Rows;
-using NZWalks.Core.Models;
-using NZWalks.Core.Repositories;
-using NZWalks.Core.Tx;
+using NZWalks.Core.Features.Difficulties.Models;
+using NZWalks.Core.Features.Difficulties.Repositories;
+using NZWalks.Core.Shared.Tx;
 
 namespace NZWalk.Infrastructure.Repositories;
 

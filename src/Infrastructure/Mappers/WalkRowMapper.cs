@@ -1,6 +1,8 @@
 using System;
 using NZWalk.Infrastructure.Rows;
-using NZWalks.Core.Models;
+using NZWalks.Core.Features.Difficulties.Models;
+using NZWalks.Core.Features.Regions.Models;
+using NZWalks.Core.Features.Walks.Models;
 using Riok.Mapperly.Abstractions;
 using UnitsNet;
 
